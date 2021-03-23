@@ -1,5 +1,6 @@
 package com.marcuskim.todude.adapter;
 
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.chip.Chip;
 import com.marcuskim.todude.R;
 import com.marcuskim.todude.model.Task;
+import com.marcuskim.todude.util.Utils;
 
 import java.util.List;
 
@@ -33,8 +35,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Task task = taskList.get(position);
+        String formattedDate = Utils.formatDate(task.getDueDate());
 
         holder.task.setText(task.getTask());
+        holder.todayChip.setText(formattedDate);
     }
 
     @Override
@@ -53,7 +57,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
             radioButton = itemView.findViewById(R.id.todo_radio_button);
             task = itemView.findViewById(R.id.todo_row_todo);
-            todayChip = itemView.findViewById(R.id.today_chip);
+            todayChip = itemView.findViewById(R.id.todo_row_chip);
 
         }
     }
