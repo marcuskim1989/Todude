@@ -2,6 +2,7 @@ package com.marcuskim.todude;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.Group;
 
 import java.util.Calendar;
+import java.util.Date;
 
 public class BottomSheetFragment extends BottomSheetDialogFragment {
 
@@ -34,6 +36,8 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
     private ImageButton saveButton;
     private CalendarView calendarView;
     private Group calendarGroup;
+    private Date dueDate;
+    Calendar calendar = Calendar.getInstance();
 
     @Override
     public View onCreateView(
@@ -62,11 +66,26 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        calendarButton.setOnClickListener(view12 -> {
+            calendarGroup.setVisibility(calendarGroup.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
+        });
+
+        calendarView.setOnDateChangeListener((calendarView, year, month, dayOfMonth) -> {
+//            Log.d("Cal", "onViewCreated: ===> month: " + (month + 1) + ", day of month: " + dayOfMonth);
+
+            calendar.clear();
+            calendar.set(year, month, dayOfMonth);
+            dueDate = calendar.getTime();
+
+        });
+
+
         saveButton.setOnClickListener(view1 -> {
             String task = enterTodo.getText().toString().trim();
-            if(!TextUtils.isEmpty(task)) {
-                Task newTask = new Task(task, Priority.HIGH, Calendar.getInstance().getTime(), Calendar.getInstance().getTime(), false);
+            if(!TextUtils.isEmpty(task) && dueDate != null) {
+                Task newTask = new Task(task, Priority.HIGH, dueDate, Calendar.getInstance().getTime(), false);
                 TaskViewModel.insert(newTask);
+                dismiss();
             }
         });
 

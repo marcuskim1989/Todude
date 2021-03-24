@@ -17,11 +17,12 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dimen_16"
         android:hint="@string/enter_todo_hint"
-        android:inputType="textPersonName"
+        android:inputType="textImeMultiLine"
         android:padding="@dimen/dimen_16"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:imeOptions="actionDone"/>
 
     <ImageButton
         android:id="@+id/priority_todo_button"
