@@ -4,4 +4,5 @@ import com.marcuskim.todude.model.Task;
 
 public interface OnTodoClickListener {
     void onTodoClick(int adapterPosition, Task task);
+    void onTodoRadioButtonClicked(Task task);
 }
