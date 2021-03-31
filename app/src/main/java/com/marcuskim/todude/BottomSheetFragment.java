@@ -72,19 +72,27 @@ public class BottomSheetFragment extends BottomSheetDialogFragment implements Vi
     @Override
     public void onResume() {
         super.onResume();
-        
-       clearEnterTaskEditText();
+
+        isEdit = sharedViewModel.getIsEdit();
+
+        Log.d("onResume", "isEdit: " + isEdit);
+
         
         if (sharedViewModel.getSelectedItem().getValue() != null) {
-            isEdit = sharedViewModel.getIsEdit();
             Task task = sharedViewModel.getSelectedItem().getValue();
-            enterTaskEditText.setText(task.getTask());
+            if (isEdit){
+                enterTaskEditText.setText(task.getTask());
+            } else {
+                clearEnterTaskEditText();
+            }
         }
 
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+//        isEdit = sharedViewModel.getIsEdit();
 
         clearEnterTaskEditText();
         sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
@@ -148,12 +156,12 @@ public class BottomSheetFragment extends BottomSheetDialogFragment implements Vi
 
         }
     }
-    
+
     public void clearEnterTaskEditText() {
         if(!isEdit) {
             enterTaskEditText.setText("");
         }
-        
+
     }
     
 }

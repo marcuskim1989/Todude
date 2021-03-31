@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements OnTodoClickListen
 //
 //            TaskViewModel.insert(task);
 
-
+            sharedViewModel.setIsEdit(false);
 
             showBottomSheetDialog();
         });
