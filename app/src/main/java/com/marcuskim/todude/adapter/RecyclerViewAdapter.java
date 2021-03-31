@@ -1,6 +1,5 @@
 package com.marcuskim.todude.adapter;
 
-import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,10 +37,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Task task = taskList.get(position);
-        String formattedDate = Utils.formatDate(task.getDueDate());
+        if (task.getDueDate() != null) {
+            String formattedDate = Utils.formatDate(task.getDueDate());
+            holder.dueDateChip.setText(formattedDate);
+        } else {
+            holder.dueDateChip.setText("No due date");
+        }
+
 
         holder.task.setText(task.getTask());
-        holder.todayChip.setText(formattedDate);
+
+
     }
 
     @Override
@@ -53,7 +59,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         public AppCompatRadioButton radioButton;
         public AppCompatTextView task;
-        public Chip todayChip;
+        public Chip dueDateChip;
 
         OnTodoClickListener onTodoClickListener;
 
@@ -62,7 +68,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
             radioButton = itemView.findViewById(R.id.todo_radio_button);
             task = itemView.findViewById(R.id.todo_row_todo);
-            todayChip = itemView.findViewById(R.id.todo_row_chip);
+            dueDateChip = itemView.findViewById(R.id.todo_row_chip);
             this.onTodoClickListener = RecyclerViewAdapter.onTodoClickListener;
 
             itemView.setOnClickListener(this);
@@ -76,7 +82,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             int id = v.getId();
             if (id == R.id.todo_row_layout) {
                 currentTask = taskList.get(getAdapterPosition());
-                onTodoClickListener.onTodoClick(getAdapterPosition(),  currentTask);
+                onTodoClickListener.onTodoClick(currentTask);
             } else if (id == R.id.todo_radio_button){
                 onTodoClickListener.onTodoRadioButtonClicked(currentTask);
             }

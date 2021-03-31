@@ -9,6 +9,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.marcuskim.todude.adapter.OnTodoClickListener;
 import com.marcuskim.todude.adapter.RecyclerViewAdapter;
 import com.marcuskim.todude.model.Priority;
+import com.marcuskim.todude.model.SharedViewModel;
 import com.marcuskim.todude.model.Task;
 import com.marcuskim.todude.model.TaskViewModel;
 
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements OnTodoClickListen
     private RecyclerViewAdapter recyclerViewAdapter;
     private int counter;
     BottomSheetFragment bottomSheetFragment;
+    private SharedViewModel sharedViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +58,8 @@ public class MainActivity extends AppCompatActivity implements OnTodoClickListen
 
         taskViewModel = new ViewModelProvider.AndroidViewModelFactory(MainActivity.this.getApplication()).create(TaskViewModel.class);
 
+        sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
+
         taskViewModel.getAllTasks().observe(this, tasks -> {
             recyclerViewAdapter = new RecyclerViewAdapter(tasks, this);
             recyclerView.setAdapter(recyclerViewAdapter);
@@ -66,6 +70,8 @@ public class MainActivity extends AppCompatActivity implements OnTodoClickListen
 //            Task task = new Task("Task " + counter++, Priority.MEDIUM, Calendar.getInstance().getTime(), Calendar.getInstance().getTime(), false);
 //
 //            TaskViewModel.insert(task);
+
+
 
             showBottomSheetDialog();
         });
@@ -98,7 +104,12 @@ public class MainActivity extends AppCompatActivity implements OnTodoClickListen
     }
 
     @Override
-    public void onTodoClick(int adapterPosition, Task task) {
+    public void onTodoClick(Task task) {
+
+        sharedViewModel.selectItem(task);
+        sharedViewModel.setIsEdit(true);
+        showBottomSheetDialog();
+
         Log.d("Click", "onTodoClick: " + task.getTask());
     }
 
