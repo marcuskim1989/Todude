@@ -13,7 +13,7 @@ public class Task {
     @PrimaryKey(autoGenerate = true)
     public long taskId;
 
-    public String task;
+    public String taskName;
 
     public Priority priority;
 
@@ -26,8 +26,8 @@ public class Task {
     @ColumnInfo(name = "is_done")
     public boolean isDone;
 
-    public Task(String task, Priority priority, Date dueDate, Date dateCreated, boolean isDone) {
-        this.task = task;
+    public Task(String taskName, Priority priority, Date dueDate, Date dateCreated, boolean isDone) {
+        this.taskName = taskName;
         this.priority = priority;
         this.dueDate = dueDate;
         this.dateCreated = dateCreated;
@@ -43,11 +43,11 @@ public class Task {
     }
 
     public String getTask() {
-        return task;
+        return taskName;
     }
 
     public void setTask(String task) {
-        this.task = task;
+        this.taskName = task;
     }
 
     public Priority getPriority() {
@@ -86,7 +86,7 @@ public class Task {
     public String toString() {
         return "Task{" +
                 "taskId=" + taskId +
-                ", task='" + task + '\'' +
+                ", task='" + taskName + '\'' +
                 ", priority=" + priority +
                 ", dueDate=" + dueDate +
                 ", dateCreated=" + dateCreated +

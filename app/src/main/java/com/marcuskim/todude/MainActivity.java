@@ -67,9 +67,8 @@ public class MainActivity extends AppCompatActivity implements OnTodoClickListen
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> {
-//            Task task = new Task("Task " + counter++, Priority.MEDIUM, Calendar.getInstance().getTime(), Calendar.getInstance().getTime(), false);
-//
-//            TaskViewModel.insert(task);
+
+            bottomSheetFragment.setDueDate(null);
 
             sharedViewModel.setIsEdit(false);
 

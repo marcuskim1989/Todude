@@ -18,6 +18,7 @@ import com.marcuskim.todude.model.Priority;
 import com.marcuskim.todude.model.SharedViewModel;
 import com.marcuskim.todude.model.Task;
 import com.marcuskim.todude.model.TaskViewModel;
+import com.marcuskim.todude.util.Utils;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.Group;
@@ -41,6 +42,7 @@ public class BottomSheetFragment extends BottomSheetDialogFragment implements Vi
     Calendar calendar = Calendar.getInstance();
     private SharedViewModel sharedViewModel;
     private boolean isEdit;
+    private Priority priority = Priority.LOW;
 
     @Override
     public View onCreateView(
@@ -92,8 +94,6 @@ public class BottomSheetFragment extends BottomSheetDialogFragment implements Vi
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-//        isEdit = sharedViewModel.getIsEdit();
-
         clearEnterTaskEditText();
         sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
 
@@ -110,18 +110,42 @@ public class BottomSheetFragment extends BottomSheetDialogFragment implements Vi
 
         });
 
+        priorityButton.setOnClickListener(v -> {
+
+            priorityRadioGroup.setVisibility(priorityRadioGroup.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
+
+            priorityRadioGroup.setOnCheckedChangeListener((radioGroup, checkedId) -> {
+                if (priorityRadioGroup.getVisibility() == View.VISIBLE) {
+                    selectedButtonId = checkedId;
+                    selectedRadioButton = view.findViewById(selectedButtonId);
+                    if (selectedRadioButton.getId() == R.id.radioButton_high) {
+                        priority = Priority.HIGH;
+                    } else if (selectedRadioButton.getId() == R.id.radioButton_med) {
+                        priority = Priority.MEDIUM;
+                    } else if (selectedRadioButton.getId() == R.id.radioButton_low) {
+                        priority = Priority.LOW;
+                    } else {
+                        priority = Priority.LOW;
+                    }
+                } else {
+                    priority = Priority.LOW;
+                }
+            });
+
+        });
 
         saveButton.setOnClickListener(view1 -> {
-            String task = enterTaskEditText.getText().toString().trim();
-            if(!TextUtils.isEmpty(task)) {
-                Task newTask = new Task(task, Priority.HIGH, dueDate, Calendar.getInstance().getTime(), false);
+            String taskName = enterTaskEditText.getText().toString().trim();
+            if(!TextUtils.isEmpty(taskName)) {
+                Task newTask = new Task(taskName, priority, dueDate, Calendar.getInstance().getTime(), false);
+
                 if (isEdit) {
                     Task taskToUpdate = sharedViewModel.getSelectedItem().getValue();
-                    Log.d("update", "onViewCreated: " + taskToUpdate.task);
-                    taskToUpdate.setTask(task);
+                    Log.d("update", "onViewCreated: " + taskToUpdate.taskName);
+                    taskToUpdate.setTask(taskName);
                     taskToUpdate.setDateCreated(Calendar.getInstance().getTime());
-                    taskToUpdate.setPriority(Priority.HIGH);
-                    taskToUpdate.setDueDate(dueDate);
+                    taskToUpdate.setPriority(taskToUpdate.priority == priority ? taskToUpdate.priority : priority);
+                    taskToUpdate.setDueDate(taskToUpdate.dueDate == dueDate ? taskToUpdate.dueDate : dueDate);
                     TaskViewModel.update(taskToUpdate);
 
                     sharedViewModel.setIsEdit(false);
@@ -155,6 +179,10 @@ public class BottomSheetFragment extends BottomSheetDialogFragment implements Vi
             Log.d("TIME", "onClick: " + dueDate.toString());
 
         }
+    }
+
+    public void setDueDate(Date date) {
+        this.dueDate = date;
     }
 
     public void clearEnterTaskEditText() {

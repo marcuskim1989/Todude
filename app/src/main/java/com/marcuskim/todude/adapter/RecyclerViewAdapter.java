@@ -1,5 +1,7 @@
 package com.marcuskim.todude.adapter;
 
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +41,20 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         Task task = taskList.get(position);
         if (task.getDueDate() != null) {
             String formattedDate = Utils.formatDate(task.getDueDate());
+
+            ColorStateList colorStateList = new ColorStateList(new int[][]{
+                    new int[] { -android.R.attr.state_enabled},
+                    new int[] {android.R.attr.state_enabled}
+            }, new int[]{
+                    Color.LTGRAY,
+                    Utils.priorityColor(task)
+            });
+
+            holder.task.setText(task.getTask());
             holder.dueDateChip.setText(formattedDate);
+            holder.dueDateChip.setTextColor(Utils.priorityColor(task));
+            holder.dueDateChip.setChipIconTint(colorStateList);
+            holder.radioButton.setButtonTintList(colorStateList);
         } else {
             holder.dueDateChip.setText("No due date");
         }
